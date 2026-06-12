@@ -1,0 +1,31 @@
+---
+name: "Lint"
+
+on:
+  workflow_call:
+
+jobs:
+  lint:
+    runs-on: "ubuntu-latest"
+    strategy:
+      fail-fast: false
+      matrix:
+        python:
+          - "3.11"
+          - "3.14"
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v6"
+      - name: "Set up Python"
+        uses: "actions/setup-python@v6"
+        with:
+          python-version: "${{ matrix.python }}"
+          allow-prereleases: true
+      - name: "Install uv"
+        uses: "astral-sh/setup-uv@v7"
+        with:
+          enable-cache: true
+      - name: "Lint code"
+        run: |
+          make lint
+...

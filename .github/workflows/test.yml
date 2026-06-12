@@ -1,0 +1,66 @@
+---
+name: "Test"
+
+on:
+  workflow_call:
+
+env:
+  COLORTERM: "yes"
+  TERM: "xterm-256color"
+  PYTEST_ADDOPTS: "--color=yes"
+  CONTAINER_RUNTIME: "docker"
+
+jobs:
+  test:
+    runs-on: "ubuntu-24.04"
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - image_tag: "nightly"
+            pulp_api_root: "/relocated/djnd/"
+            python: "3.11"
+          - image_tag: "latest"
+            lower_bounds: true
+            python: "3.8"
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v6"
+      - name: "Download wheels"
+        uses: "actions/download-artifact@v8"
+        with:
+          name: "pulp_cli_packages"
+      - name: "Set up Python"
+        uses: "actions/setup-python@v6"
+        with:
+          python-version: "${{ matrix.python }}"
+          allow-prereleases: true
+      - name: "Install uv"
+        uses: "astral-sh/setup-uv@v7"
+        with:
+          enable-cache: true
+      - name: "Run tests"
+        env:
+          CONTAINER_RUNTIME: "${{ matrix.container_runtime }}"
+          IMAGE_TAG: "${{ matrix.image_tag }}"
+          FROM_TAG: "${{ matrix.from_tag }}"
+          CONTAINER_FILE: "${{ matrix.container_file }}"
+          PULP_HTTPS: "${{ matrix.pulp_https }}"
+          PULP_OAUTH2: "${{ matrix.pulp_oauth2 }}"
+          PULP_API_ROOT: "${{ matrix.pulp_api_root }}"
+          PULP_DOMAIN_ENABLED: "${{ matrix.pulp_domain_enabled }}"
+          PULP_ENABLED_PLUGINS: "${{ matrix.pulp_enabled_plugins }}"
+          OAS_VERSION: "${{ matrix.oas_version }}"
+        run: |
+          if [ "${{matrix.lower_bounds}}" ]
+          then
+            RESOLUTION=("--resolution" "lowest-direct")
+          elif [ "${{matrix.upper_bounds}}" ]
+          then
+            RESOLUTION=("--resolution" "highest")
+          else
+            RESOLUTION=()
+          fi
+
+          uv run "${RESOLUTION[@]}" --isolated --with dist/pulp_glue*.whl --with dist/pulp_cli*.whl --only-group test .ci/run_container.sh make _test
+...
