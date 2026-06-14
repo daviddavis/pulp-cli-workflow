@@ -188,7 +188,7 @@ line-length = 100
 
 [tool.ruff.lint]
 # This section is managed by the cookiecutter templates.
-extend-select = ["I", "INT"]
+extend-select = ["I", "INT", "PTH"]
 
 [tool.ruff.lint.isort]
 # This section is managed by the cookiecutter templates.
@@ -215,7 +215,6 @@ module = [
   "schema.*",
 ]
 ignore_missing_imports = true
-
 [dependency-groups]
 # This section is managed by the cookiecutter templates.
 dev = [
@@ -235,7 +234,6 @@ lint = [
   "types-toml",
 ]
 test = [
-  "jinja2>=3.1.4,<3.2",
   "pygments>=2.19.2",
   "pytest>=7.0.0,<9.1",
   "pytest-xdist>=3.8.0,<3.9",
