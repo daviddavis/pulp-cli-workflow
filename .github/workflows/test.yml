@@ -18,11 +18,15 @@ jobs:
       matrix:
         include:
           - image_tag: "nightly"
+            from_tag: "nightly"
+            container_file: "Containerfile"
             pulp_api_root: "/relocated/djnd/"
-            python: "3.11"
+            python: "3.14"
           - image_tag: "latest"
+            from_tag: "latest"
+            container_file: "Containerfile"
             lower_bounds: true
-            python: "3.8"
+            python: "3.10"
     steps:
       - name: "Checkout"
         uses: "actions/checkout@v6"
