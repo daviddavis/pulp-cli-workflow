@@ -2,8 +2,8 @@ import typing as t
 
 from pulp_glue.common.context import (
     EntityDefinition,
-    PulpEntityContext,
     PluginRequirement,
+    PulpEntityContext,
 )
 from pulp_glue.common.i18n import get_translation
 
@@ -28,8 +28,6 @@ class PulpWorkflowContext(PulpEntityContext):
             body={"state": "canceled"},
         )
 
-    def preprocess_entity(
-        self, body: EntityDefinition, partial: bool = False
-    ) -> EntityDefinition:
+    def preprocess_entity(self, body: EntityDefinition, partial: bool = False) -> EntityDefinition:
         body = super().preprocess_entity(body, partial=partial)
         return body

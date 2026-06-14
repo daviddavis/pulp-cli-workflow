@@ -10,7 +10,6 @@ from pulp_cli.generic import (
     pass_entity_context,
     pass_pulp_context,
     pulp_command,
-    pulp_option,
 )
 
 from pulp_glue.common.context import DATETIME_FORMATS
@@ -71,9 +70,7 @@ def create(
             try:
                 parsed_tasks.append(json.loads(task_json))
             except json.JSONDecodeError as e:
-                raise click.ClickException(
-                    _("Invalid JSON for --task: {err}").format(err=str(e))
-                )
+                raise click.ClickException(_("Invalid JSON for --task: {err}").format(err=str(e)))
         body["tasks"] = parsed_tasks
 
     if pulp_labels:
