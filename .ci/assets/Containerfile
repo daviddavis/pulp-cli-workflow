@@ -1,0 +1,7 @@
+ARG FROM_TAG="latest"
+FROM ghcr.io/pulp/pulp:${FROM_TAG}
+
+ARG PULP_WORKFLOW_VERSION=""
+
+RUN pip3 install --upgrade \
+  pulp-workflow${PULP_WORKFLOW_VERSION}
