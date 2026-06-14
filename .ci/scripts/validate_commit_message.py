@@ -37,7 +37,7 @@ if any(re.match(pattern, message) for pattern in BLOCKING_REGEX):
     sys.exit("This PR is not ready for consumption.")
 
 g = Github(os.environ.get("GITHUB_TOKEN"))
-repo = g.get_repo("daviddavis/pulp-cli-workflow")
+repo = g.get_repo("pulp/pulp-cli-workflow")
 
 
 def check_status(issue: str) -> None:
