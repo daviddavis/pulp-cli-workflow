@@ -22,7 +22,7 @@ classifiers=[
   "Typing :: Typed",
 ]
 dependencies = [
-  "pulp-cli>=0.23.1,<0.25",
+  "pulp-cli<0.41,>=0.23.1",
   "pulp-glue-workflow==0.0.1.dev0",
 ]
 
