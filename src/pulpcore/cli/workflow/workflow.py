@@ -12,7 +12,7 @@ from pulp_cli.generic import (
     pulp_command,
 )
 
-from pulp_glue.common.context import DATETIME_FORMATS
+from pulp_glue.common.context import DATETIME_FORMATS, PulpEntityContext
 from pulp_glue.common.i18n import get_translation
 from pulp_glue.workflow.context import PulpWorkflowContext
 
@@ -51,7 +51,7 @@ _ = translation.gettext
 @pass_pulp_context
 def create(
     pulp_ctx: PulpCLIContext,
-    entity_ctx: PulpWorkflowContext,
+    entity_ctx: PulpEntityContext,
     /,
     name: str,
     start_time: t.Optional[datetime],
@@ -59,6 +59,8 @@ def create(
     pulp_labels: tuple[str, ...],
 ) -> None:
     """Create a workflow."""
+    assert isinstance(entity_ctx, PulpWorkflowContext)
+
     body: dict[str, t.Any] = {"name": name}
 
     if start_time is not None:
@@ -95,10 +97,12 @@ def create(
 @pass_pulp_context
 def cancel(
     pulp_ctx: PulpCLIContext,
-    entity_ctx: PulpWorkflowContext,
+    entity_ctx: PulpEntityContext,
     /,
 ) -> None:
     """Cancel a waiting or running workflow."""
+    assert isinstance(entity_ctx, PulpWorkflowContext)
+
     entity = entity_ctx.entity
     if entity["state"] not in ("waiting", "running"):
         raise click.ClickException(
