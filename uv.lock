@@ -835,7 +835,7 @@ test = [
 
 [package.metadata]
 requires-dist = [
-    { name = "pulp-cli", specifier = ">=0.23.1,<0.41" },
+    { name = "pulp-cli", specifier = ">=0.32.0,<0.41" },
     { name = "pulp-glue-workflow", editable = "pulp-glue-workflow" },
 ]
 
@@ -908,7 +908,7 @@ dependencies = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "pulp-glue", specifier = ">=0.23.1,<0.41" }]
+requires-dist = [{ name = "pulp-glue", specifier = ">=0.32.0,<0.41" }]
 
 [[package]]
 name = "pycparser"
