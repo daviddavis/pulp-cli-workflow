@@ -17,14 +17,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - image_tag: "nightly"
+          - container_file: "Containerfile"
             from_tag: "nightly"
-            container_file: "Containerfile"
+            image_tag: "nightly"
             pulp_api_root: "/relocated/djnd/"
             python: "3.14"
-          - image_tag: "latest"
+          - container_file: "Containerfile"
             from_tag: "latest"
-            container_file: "Containerfile"
+            image_tag: "latest"
             lower_bounds: true
             python: "3.10"
     steps:
