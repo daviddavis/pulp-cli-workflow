@@ -27,8 +27,8 @@ dependencies = [
 ]
 
 [project.urls]
-repository = "https://github.com/daviddavis/pulp-cli-workflow"
-changelog = "https://github.com/daviddavis/pulp-cli-workflow/blob/main/CHANGES.md"
+repository = "https://github.com/pulp/pulp-cli-workflow"
+changelog = "https://github.com/pulp/pulp-cli-workflow/blob/main/CHANGES.md"
 
 [project.entry-points."pulp_cli.plugins"]
 workflow = "pulpcore.cli.workflow"
