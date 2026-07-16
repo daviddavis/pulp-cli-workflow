@@ -1,6 +1,6 @@
 # Pulp CLI Workflow Plugin
 
-A pulp-cli plugin for managing [Pulp workflows](https://github.com/daviddavis/pulp_workflow).
+A pulp-cli plugin for managing [Pulp workflows](https://github.com/pulp/pulp_workflow).
 
 ## Usage
 
