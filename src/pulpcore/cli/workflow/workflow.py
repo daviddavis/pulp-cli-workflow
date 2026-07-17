@@ -14,7 +14,7 @@ from pulp_cli.generic import (
 
 from pulp_glue.common.context import DATETIME_FORMATS, PulpEntityContext
 from pulp_glue.common.i18n import get_translation
-from pulp_glue.workflow.context import PulpWorkflowContext
+from pulp_glue.workflow.context import PulpWorkflowContext, PulpWorkflowRunContext
 
 translation = get_translation(__name__)
 _ = translation.gettext
@@ -27,7 +27,18 @@ _ = translation.gettext
     "start_time",
     default=None,
     type=click.DateTime(formats=DATETIME_FORMATS),
-    help=_("ISO 8601 datetime for when the workflow should start. Defaults to now."),
+    help=_("ISO 8601 datetime for when the workflow should first run. Defaults to now."),
+)
+@click.option(
+    "--dispatch-interval",
+    "dispatch_interval",
+    default=None,
+    type=click.STRING,
+    help=_(
+        "If set, the interval on which the workflow re-runs, creating a new run each time "
+        "(e.g. '1 00:00:00' for daily or '01:00:00' for hourly). If omitted, the workflow "
+        "runs exactly once at start-time."
+    ),
 )
 @click.option(
     "--task",
@@ -55,6 +66,7 @@ def create(
     /,
     name: str,
     start_time: t.Optional[datetime],
+    dispatch_interval: t.Optional[str],
     tasks: tuple[str, ...],
     pulp_labels: tuple[str, ...],
 ) -> None:
@@ -65,6 +77,9 @@ def create(
 
     if start_time is not None:
         body["start_time"] = start_time
+
+    if dispatch_interval is not None:
+        body["dispatch_interval"] = dispatch_interval
 
     if tasks:
         parsed_tasks = []
@@ -100,14 +115,34 @@ def cancel(
     entity_ctx: PulpEntityContext,
     /,
 ) -> None:
-    """Cancel a waiting or running workflow."""
+    """Stop a workflow.
+
+    Removes the workflow's schedule so no further runs are created and cancels any of its
+    runs that are still in progress. This is idempotent.
+    """
     assert isinstance(entity_ctx, PulpWorkflowContext)
+
+    result = entity_ctx.cancel()
+    pulp_ctx.output_result(result)
+
+
+@pulp_command(name="cancel")
+@href_option
+@pass_entity_context
+@pass_pulp_context
+def run_cancel(
+    pulp_ctx: PulpCLIContext,
+    entity_ctx: PulpEntityContext,
+    /,
+) -> None:
+    """Cancel a waiting or running workflow run."""
+    assert isinstance(entity_ctx, PulpWorkflowRunContext)
 
     entity = entity_ctx.entity
     if entity["state"] not in ("waiting", "running"):
         raise click.ClickException(
-            _("Workflow '{name}' is in state '{state}' and cannot be canceled.").format(
-                name=entity["name"], state=entity["state"]
+            _("Workflow run '{href}' is in state '{state}' and cannot be canceled.").format(
+                href=entity["pulp_href"], state=entity["state"]
             )
         )
     result = entity_ctx.cancel()
