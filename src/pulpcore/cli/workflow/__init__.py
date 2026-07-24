@@ -22,7 +22,7 @@ from pulpcore.cli.workflow.workflow import cancel, create, run_cancel
 translation = get_translation(__package__)
 _ = translation.gettext
 
-__version__ = "0.1.0.dev"
+__version__ = "0.2.0.dev"
 
 lookup_options = [href_option, name_option]
 filter_options = [

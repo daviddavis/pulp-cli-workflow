@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pulp-cli-workflow"
-version = "0.1.0.dev"
+version = "0.2.0.dev"
 description = "Command line interface to talk to pulpcore's REST API. (Workflow plugin commands)"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -23,7 +23,7 @@ classifiers=[
 ]
 dependencies = [
   "pulp-cli<0.41,>=0.32.0",
-  "pulp-glue-workflow==0.1.0.dev",
+  "pulp-glue-workflow==0.2.0.dev",
 ]
 
 [project.urls]
@@ -82,7 +82,7 @@ namespaces = true
 
 [tool.bumpversion]
 # This section is managed by the cookiecutter templates.
-current_version = "0.1.0.dev"
+current_version = "0.2.0.dev"
 commit = false
 tag = false
 parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)(\\.(?P<release>[a-z]+))?"
