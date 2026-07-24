@@ -39,23 +39,25 @@ def no_api(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 @pytest.mark.help_page
-def test_access_help(no_api: None, subtests: pytest.Subtests) -> None:
+def test_access_help(no_api: None) -> None:
     """Test, that all help screens are accessible without touching the api property."""
     if parse_version(PULP_CLI_VERSION) < parse_version("0.24"):
         pytest.skip("This test is incompatible with older cli versions.")
 
     runner = CliRunner()
+    failures: t.List[str] = []
     for args in traverse_commands(main.commands["workflow"], ["workflow"]):
-        with subtests.test(msg=" ".join(args)):
-            result = runner.invoke(main, args + ["--help"], catch_exceptions=False)
+        result = runner.invoke(main, args + ["--help"], catch_exceptions=False)
 
-            if result.exit_code == 2:
-                assert (
-                    "not available in this context" in result.stdout
-                    or "not available in this context" in result.stderr
-                )
-            else:
-                assert result.exit_code == 0
-                assert result.stdout.startswith("Usage:") or result.stdout.startswith(
-                    "DeprecationWarning:"
-                )
+        if result.exit_code == 2:
+            if (
+                "not available in this context" not in result.stdout
+                and "not available in this context" not in result.stderr
+            ):
+                failures.append(" ".join(args))
+        elif result.exit_code != 0 or not (
+            result.stdout.startswith("Usage:") or result.stdout.startswith("DeprecationWarning:")
+        ):
+            failures.append(" ".join(args))
+
+    assert not failures, "Help screens failed for: " + ", ".join(failures)
