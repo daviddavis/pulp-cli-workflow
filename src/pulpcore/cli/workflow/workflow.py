@@ -65,8 +65,8 @@ def create(
     entity_ctx: PulpEntityContext,
     /,
     name: str,
-    start_time: t.Optional[datetime],
-    dispatch_interval: t.Optional[str],
+    start_time: datetime | None,
+    dispatch_interval: str | None,
     tasks: tuple[str, ...],
     pulp_labels: tuple[str, ...],
 ) -> None:
